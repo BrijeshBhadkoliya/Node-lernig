@@ -1,15 +1,36 @@
 const { createServer } = require("node:http");
+const fs = require("fs");
 
-const hostname = "127.0.0.1";
+const hostname = "120.10.1.20";
 
-const port = 3002;
+const port = 3001;
 
 const server = createServer((req, res) => {
-    console.log(req.url);
-    
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.end("Hello World");
+  fileName = "";
+  switch (req.url) {
+         case "/home":
+           fileName = "./Home.html";
+           break;
+        case "/about":
+          fileName = "./About.html";
+          break;
+        case "/contect":
+          fileName = "./Contect.html";
+          break;
+default: 
+  fileName = "./404.html";
+break;
+  }
+  fs.readFile(fileName, function (err, data) {
+    if (err) {
+      console.error(err);
+      return false;
+    }
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.write(data);
+    res.end();
+  });
+
 });
 
 server.listen(port, hostname, () => {
